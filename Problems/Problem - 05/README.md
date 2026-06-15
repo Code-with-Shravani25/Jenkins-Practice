@@ -14,4 +14,4 @@ Post build action --> Build other projects --> Enter downstream job name --> Sav
 ---
 ## Verify
 ---
-Trigger upstream, it will also trigger downstream job.
+Trigger upstream, it will also trigger downstream job automatically.
