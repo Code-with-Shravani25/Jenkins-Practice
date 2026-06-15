@@ -12,7 +12,7 @@ Freestyle job --> Job name --> Add build step --> Execute shell --> echo "Execut
 ---
 Post build action --> Build other projects --> Enter downstream job name --> Save
 ---
-## Verify
+## Step 4: Verify
 ---
 Trigger upstream, it will also trigger downstream job automatically.
 ---
