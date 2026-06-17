@@ -1,6 +1,6 @@
 # Configure a Jenkins job to: Clone a private Git Repo using SSH Key Authentication
 ---
-- Generate SSH Key on Jenkins server:
+Generate SSH Key on Jenkins server:
 ```bash
 sudo su - jenkins  # Switch to jenkins user, because jenkins jobs run under jenkins user account and not under personal account like ec2-user,ubuntu
                    # Jenkins cannot automatically use that key (/home/ubuntu//ssh) because jobs run as jenkins user and it looks in its own home directory
