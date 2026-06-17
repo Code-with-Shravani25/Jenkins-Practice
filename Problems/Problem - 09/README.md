@@ -1,6 +1,6 @@
 # Write a shell script inside Jenkins that checks disk usage and sends exit code based on threshold
 ---
-- Job --> Build step --> Execute shell
+Job --> Build step --> Execute shell --> Add below Script
 ```bash
 #!/bin/bash
 THRESHOLD=80
