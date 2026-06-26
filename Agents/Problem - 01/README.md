@@ -1,4 +1,4 @@
-# Adding nodes(agents) to Master Jenkins
+# Configure Jenkins master-agent architecture.
 ---
 ## Method 1: Using agents pem file
 1. Launch an EC2, install java and jenkins and configure jenkins by logging in UI
