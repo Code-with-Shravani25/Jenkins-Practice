@@ -7,11 +7,11 @@ To execute different stages on different Jenkins nodes, assign
 
 ## Example Setup
 
-  Agent     Node Name        Label
-  --------- ---------------- ----------
-  Agent 1   `linux-agent`    `linux`
-  Agent 2   `docker-agent`   `docker`
-  Agent 3   `maven-agent`    `maven`
+| Agent | Node Name | Label |
+|-------|-----------|-------|
+| Agent 1 | `linux-agent` | `linux` |
+| Agent 2 | `docker-agent` | `docker` |
+| Agent 3 | `maven-agent` | `maven` |
 
 ## Declarative Pipeline Example
 
