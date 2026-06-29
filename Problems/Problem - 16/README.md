@@ -63,29 +63,7 @@ git version 2.43
 
 # Step 2: Install Terraform
 
-Download Terraform:
-
-```bash
-wget https://releases.hashicorp.com/terraform/1.9.8/terraform_1.9.8_linux_amd64.zip
-```
-
-Install unzip:
-
-```bash
-sudo apt install unzip -y
-```
-
-Extract Terraform:
-
-```bash
-unzip terraform_1.9.8_linux_amd64.zip
-```
-
-Move Terraform binary:
-
-```bash
-sudo mv terraform /usr/local/bin/
-```
+Download Terraform: from chrome copy paste the commands
 
 Verify installation:
 
@@ -117,66 +95,13 @@ Example permissions:
 * AmazonS3FullAccess (if using remote backend)
 * AmazonDynamoDBFullAccess (if using state locking)
 
-Install AWS CLI if required:
-
-```bash
-sudo apt install awscli -y
-```
-
-Verify credentials:
-
-```bash
-aws sts get-caller-identity
-```
+---
 
 ---
 
-# Step 4: Install Required Jenkins Plugins
-
-Navigate to:
-
-```
-Manage Jenkins
-        ↓
-Plugins
-```
-
-Install:
-
-* Git
-* Pipeline
-* Pipeline Stage View
-* Credentials Binding
-* Terraform Plugin (Optional)
-
-Restart Jenkins after installation.
-
 ---
 
-# Step 5: Push Terraform Code to GitHub
-
-Example Repository Structure
-
-```
-TerraformPractice/
-
-└── Problems/
-    ├── Problem - 01/
-    │   ├── main.tf
-    │   ├── variables.tf
-    │   └── outputs.tf
-    │
-    └── Problem - 02/
-        ├── main.tf
-        ├── variables.tf
-        └── outputs.tf
-```
-
-Push the repository to GitHub.
-
----
-
-# Step 6: Create a Jenkins Pipeline Job
+# Step 4: Create a Jenkins Pipeline Job
 
 ```
 Dashboard
@@ -200,7 +125,7 @@ Save
 
 ---
 
-# Step 7: Jenkins Pipeline (Create Infrastructure)
+# Step 5: Jenkins Pipeline (Create Infrastructure)
 
 ```groovy
 pipeline {
@@ -428,33 +353,3 @@ AWS Infrastructure Removed
 ```
 
 ---
-
-# Expected Interview Questions
-
-### Why do we use `terraform init`?
-
-It initializes the working directory and downloads the required providers and modules.
-
-### Why do we run `terraform validate`?
-
-To verify that the Terraform configuration is syntactically correct.
-
-### Why do we run `terraform plan`?
-
-To preview the infrastructure changes before applying them.
-
-### Why do we use `terraform apply -auto-approve`?
-
-It applies the planned changes without prompting for manual confirmation. This is useful in automated pipelines.
-
-### Why do we use `dir()`?
-
-Because the Terraform files are located in a subdirectory of the cloned repository. `dir()` changes Jenkins' working directory so Terraform can locate the configuration files.
-
-### Why doesn't `cd` work across multiple `sh` steps?
-
-Each `sh` step launches a new shell process. Any directory changes made in one shell are lost before the next `sh` step starts. `dir()` avoids this by setting the working directory for all enclosed steps.
-
-### Why do we use an IAM Role instead of AWS access keys?
-
-IAM Roles provide temporary credentials and eliminate the need to store long-lived AWS access keys on the Jenkins server, making the setup more secure.
