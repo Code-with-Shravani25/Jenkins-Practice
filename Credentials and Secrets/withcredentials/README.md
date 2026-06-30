@@ -3,6 +3,7 @@
 ## What is `withCredentials`?
 
 `withCredentials` is a Jenkins Pipeline step used to **temporarily inject credentials into your pipeline**. The credentials are available **only inside the `withCredentials` block**, making it one of the most secure ways to use secrets.
+withCredentials is the standard and most secure way to read secrets from the Jenkins Credentials Store in a pipeline.
 
 ---
 
