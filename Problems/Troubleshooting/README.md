@@ -507,3 +507,375 @@ pipeline {
 ```
 
 Following this structured troubleshooting process helps quickly identify and resolve most Jenkins production issues.
+---
+
+# 11. Troubleshoot intermittent Jenkins pipeline failures occurring randomly during deployment.
+---
+
+# Jenkins Troubleshooting Guide: Intermittent Pipeline Failures During Deployment
+
+## Objective
+
+This guide explains a systematic approach to troubleshoot Jenkins pipeline failures that occur randomly during the deployment stage.
+
+---
+
+# Step 1: Check Jenkins Console Logs
+
+Start by reviewing the Jenkins **Console Output** of the failed build.
+
+Look for errors such as:
+
+* Connection timed out
+* Permission denied
+* Authentication failed
+* Out of memory
+* No space left on device
+* SSH connection errors
+* Docker or Kubernetes errors
+
+Compare the failed build log with a successful build to identify where the failure begins.
+
+---
+
+# Step 2: Compare Successful and Failed Builds
+
+Compare the following between successful and failed executions:
+
+* Git commit/version
+* Branch
+* Jenkins agent
+* Environment variables
+* Build duration
+* Deployment target
+
+This helps determine whether the issue is environment-specific or code-related.
+
+---
+
+# Step 3: Verify Jenkins Agent Health
+
+Random failures often occur due to unhealthy Jenkins agents.
+
+Check:
+
+```bash
+df -h
+free -m
+top
+uptime
+```
+
+Verify:
+
+* Disk space
+* Memory usage
+* CPU utilization
+* System uptime
+
+Resolve issues such as:
+
+* Disk full
+* High CPU usage
+* Low memory
+* Hung processes
+
+---
+
+# Step 4: Verify Network Connectivity
+
+Deployment usually requires connectivity to external systems.
+
+Examples:
+
+* GitHub
+* Docker Hub
+* AWS
+* Kubernetes Cluster
+* Remote Linux Servers
+
+Test connectivity using:
+
+```bash
+ping github.com
+curl https://api.github.com
+ssh user@server
+```
+
+Check for:
+
+* Network interruptions
+* DNS issues
+* Firewall restrictions
+* VPN connectivity problems
+
+---
+
+# Step 5: Verify Jenkins Credentials
+
+Ensure Jenkins credentials are valid and not expired.
+
+Common credentials include:
+
+* GitHub Personal Access Token or SSH Key
+* Docker Hub Username & Password
+* AWS Access Keys or IAM Role
+* SSH Private Keys
+
+Always access secrets securely using:
+
+```groovy
+withCredentials(...)
+```
+
+Never hardcode usernames, passwords, or access keys in the pipeline.
+
+---
+
+# Step 6: Check Deployment Server Health
+
+If deploying to a remote server, verify that the server is healthy.
+
+Useful commands:
+
+```bash
+systemctl status docker
+systemctl status nginx
+journalctl -xe
+```
+
+Verify:
+
+* Server is reachable
+* Required services are running
+* Disk space is available
+* No system errors
+
+---
+
+# Step 7: Check Resource Contention
+
+Failures may occur if multiple pipelines deploy simultaneously.
+
+Possible issues:
+
+* Multiple jobs writing to the same workspace
+* Simultaneous deployments to the same server
+* Docker image conflicts
+* Terraform state lock
+* Shared resource conflicts
+
+Recommended solutions:
+
+* Serialize deployments
+* Use Jenkins Lockable Resources plugin
+* Use separate workspaces
+
+---
+
+# Step 8: Clean Jenkins Workspace
+
+Old files can cause inconsistent behavior.
+
+Clean the workspace before every build.
+
+```groovy
+cleanWs()
+```
+
+or
+
+```bash
+rm -rf *
+```
+
+This removes stale artifacts and temporary files.
+
+---
+
+# Step 9: Verify Jenkins Plugins
+
+Outdated plugins may introduce random failures.
+
+Review plugins such as:
+
+* Pipeline Plugin
+* Git Plugin
+* Docker Plugin
+* SSH Plugin
+* Credentials Plugin
+
+Keep plugins updated after testing compatibility.
+
+---
+
+# Step 10: Review Deployment Scripts
+
+Inspect deployment scripts for:
+
+* Hardcoded paths
+* Missing error handling
+* Race conditions
+* Missing retries
+* Invalid permissions
+
+Example:
+
+Instead of:
+
+```bash
+scp app.jar server:/opt/
+```
+
+Use:
+
+```bash
+scp app.jar server:/opt/ || exit 1
+```
+
+Always fail immediately if deployment commands fail.
+
+---
+
+# Step 11: Review Infrastructure Logs
+
+Jenkins logs may not show infrastructure-related issues.
+
+Check logs from:
+
+* EC2 Instance
+* Docker Containers
+* Kubernetes Pods
+* Application Logs
+* Nginx
+* Load Balancer
+
+These logs help identify server-side problems.
+
+---
+
+# Step 12: Add Retry Logic
+
+Transient network or infrastructure failures can often be resolved using retries.
+
+Example:
+
+```groovy
+retry(3) {
+    sh './deploy.sh'
+}
+```
+
+The deployment step will automatically retry up to three times before failing.
+
+---
+
+# Step 13: Configure Timeouts
+
+Prevent pipelines from hanging indefinitely.
+
+Example:
+
+```groovy
+timeout(time: 20, unit: 'MINUTES') {
+    sh './deploy.sh'
+}
+```
+
+This terminates the build if it exceeds the specified duration.
+
+---
+
+# Step 14: Archive Build Logs
+
+Store logs and artifacts after every build.
+
+Example:
+
+```groovy
+post {
+    always {
+        archiveArtifacts artifacts: 'logs/**'
+    }
+}
+```
+
+Archived logs simplify troubleshooting and historical analysis.
+
+---
+
+# Sample Jenkins Pipeline
+
+```groovy
+pipeline {
+    agent any
+
+    options {
+        timeout(time: 30, unit: 'MINUTES')
+    }
+
+    stages {
+
+        stage('Clean Workspace') {
+            steps {
+                cleanWs()
+            }
+        }
+
+        stage('Deploy') {
+            steps {
+                retry(3) {
+                    sh './deploy.sh'
+                }
+            }
+        }
+    }
+
+    post {
+        always {
+            archiveArtifacts artifacts: 'logs/**', allowEmptyArchive: true
+        }
+    }
+}
+```
+
+---
+
+# Troubleshooting Checklist
+
+* Review Jenkins Console Output.
+* Compare successful and failed builds.
+* Verify Jenkins agent health (CPU, Memory, Disk).
+* Check network connectivity.
+* Validate Jenkins credentials.
+* Verify deployment server health.
+* Check for concurrent deployments.
+* Clean Jenkins workspace.
+* Update and verify Jenkins plugins.
+* Review deployment scripts.
+* Inspect infrastructure logs.
+* Add retry logic.
+* Configure pipeline timeouts.
+* Archive logs for future analysis.
+
+---
+
+# Best Practices
+
+* Use `withCredentials()` to securely access secrets.
+* Use `cleanWs()` before builds to avoid stale artifacts.
+* Implement `retry()` for transient failures.
+* Configure `timeout()` to prevent hanging builds.
+* Archive logs and artifacts after every execution.
+* Keep Jenkins plugins up to date.
+* Monitor Jenkins agents for CPU, memory, and disk utilization.
+* Avoid concurrent deployments to shared infrastructure.
+* Validate deployment scripts with proper error handling.
+* Regularly monitor application and infrastructure logs.
+
+---
+
+# Conclusion
+
+Intermittent Jenkins deployment failures are typically caused by infrastructure issues, network instability, unhealthy Jenkins agents, expired credentials, resource contention, or deployment script problems. By following a structured troubleshooting process and implementing best practices such as workspace cleanup, retries, timeouts, and log archiving, you can significantly improve pipeline reliability and reduce deployment failures.
+
