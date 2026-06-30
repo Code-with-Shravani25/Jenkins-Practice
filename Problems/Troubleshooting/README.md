@@ -879,3 +879,57 @@ pipeline {
 
 Intermittent Jenkins deployment failures are typically caused by infrastructure issues, network instability, unhealthy Jenkins agents, expired credentials, resource contention, or deployment script problems. By following a structured troubleshooting process and implementing best practices such as workspace cleanup, retries, timeouts, and log archiving, you can significantly improve pipeline reliability and reduce deployment failures.
 
+---
+# 12. Debug a broken Jenkinsfile with syntax/runtime issues.
+
+## Overview
+
+A Jenkins pipeline can fail due to two main types of issues:
+
+1. **Syntax Errors** – Errors in the Jenkinsfile structure that prevent the pipeline from starting.
+2. **Runtime Errors** – Errors that occur while the pipeline is executing.
+
+---
+
+# Common Syntax Issues
+
+| Issue | Cause | Solution |
+|-------|-------|----------|
+| Missing `{}` or `()` | Incorrect Jenkinsfile syntax | Add the missing braces or parentheses. |
+| Missing `steps {}` block | Pipeline step is outside the steps block | Wrap commands inside `steps {}`. |
+| Unclosed stage or pipeline block | Missing closing `}` | Ensure every opening brace has a matching closing brace. |
+| Invalid Declarative Pipeline syntax | Incorrect pipeline structure | Validate the Jenkinsfile using the Pipeline Linter. |
+| Typographical errors | Misspelled keywords (e.g., `stage`, `steps`, `pipeline`) | Correct the spelling. |
+
+---
+
+# Common Runtime Issues
+
+| Issue | Cause | Solution |
+|-------|-------|----------|
+| Git checkout failed | Invalid repository URL or missing credentials | Verify repository URL and configure Git credentials. |
+| Command not found | Required tool is not installed | Install the required tool on the Jenkins agent. |
+| Docker permission denied | Jenkins user is not in the Docker group | Add the Jenkins user to the Docker group and restart Jenkins. |
+| Authentication failed | Invalid credentials | Update the credentials in Jenkins. |
+| Credentials not found | Incorrect `credentialsId` | Use the correct Jenkins credentials ID. |
+| File not found | Incorrect file path | Verify the file exists and the path is correct. |
+| Deployment failed | Invalid deployment configuration | Check deployment scripts and target environment. |
+| Timeout | Build takes longer than the configured timeout | Increase the timeout or optimize the build. |
+
+---
+
+# Debugging Tips
+
+- Review the **Console Output** for the exact error message.
+- Validate the Jenkinsfile before running the pipeline.
+- Check matching braces `{}` and pipeline structure.
+- Verify credentials and environment variables.
+- Ensure required tools are installed on the Jenkins agent.
+- Test each stage independently to isolate the issue.
+
+---
+
+# Conclusion
+
+Syntax issues prevent a Jenkins pipeline from starting, whereas runtime issues occur during pipeline execution. Carefully reviewing the Jenkinsfile, console logs, credentials, and agent configuration helps identify and resolve most pipeline failures.
+
