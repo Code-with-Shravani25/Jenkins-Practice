@@ -133,6 +133,7 @@ Save the credential.
 # Step 4: Create a Jenkins Pipeline
 
 Create a new Pipeline project and paste the following Jenkinsfile.
+Write a Jenkins pipeline to: Read secret values from Jenkins credentials store
 
 ```groovy
 pipeline {
