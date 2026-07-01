@@ -9,53 +9,21 @@ There are two types of Jenkins pipelines:
 ✅ node('linux') {} means run on the agent that has the label linux
 
 ```bash
-node {
-
-    stage('Checkout') {
-        echo "Cloning source code..."
-        git branch: 'main', url: 'https://github.com/your-username/your-repository.git'
+node{
+    stage('Clone'){
+        git branch: 'main', url: 'https://github.com/Code-with-Shravani25/Java-maven-code-with-test-cases.git'
     }
-
-    stage('Build') {
-        echo "Building application..."
-        sh 'mvn clean package'
+    stage('Build'){
+        sh 'mvn clean compile'
     }
-
-    stage('Unit Test') {
-        echo "Running unit tests..."
+     stage('Test'){
         sh 'mvn test'
     }
-
-    stage('Deploy to Dev') {
-        echo "Deploying to Development environment..."
-        sh './deploy-dev.sh'
+     stage('Package'){
+        sh 'mvn package'
     }
-
-    stage('Deploy to QA') {
-        echo "Deploying to QA environment..."
-        sh './deploy-qa.sh'
-    }
-
-    stage('Approval for UAT') {
-        input message: 'Deploy to UAT?', ok: 'Proceed'
-    }
-
-    stage('Deploy to UAT') {
-        echo "Deploying to UAT environment..."
-        sh './deploy-uat.sh'
-    }
-
-    stage('Approval for Production') {
-        input message: 'Deploy to Production?', ok: 'Deploy'
-    }
-
-    stage('Deploy to Production') {
-        echo "Deploying to Production environment..."
-        sh './deploy-prod.sh'
-    }
-
-    stage('Success') {
-        echo "Application successfully deployed to all environments."
+    stage('Deploy'){
+        echo 'Deployed'
     }
 }
 ```
