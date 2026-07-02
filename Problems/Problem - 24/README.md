@@ -412,3 +412,11 @@ Send Notifications
 # Conclusion
 
 A distributed Jenkins architecture with a dedicated controller, multiple build agents, dynamic Kubernetes-based executors, external artifact storage, centralized monitoring, and secure credential management provides a scalable solution capable of handling **500+ daily builds** efficiently. This design improves performance, minimizes build queue times, optimizes infrastructure costs, and ensures high availability for enterprise CI/CD workloads.
+
+### Interview Questions that may be asked on this:
+
+"How would you scale Jenkins if the number of builds increased?"
+"How would you handle 500 builds per day?"
+"Why do we use Jenkins agents?"
+"What is the difference between a Jenkins controller and an agent?"
+"How can multiple Jenkins jobs run simultaneously?"
