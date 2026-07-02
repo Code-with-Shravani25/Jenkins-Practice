@@ -1,4 +1,4 @@
-# Create multibranch pipeline in Jenkins.
+# Write Jenkinsfile for: Multi-environment deployment
 - A multi-environment deployment pipeline allows you to deploy the same application to different environments (Development, Staging, Production) using a single Jenkinsfile
 ```bash
 pipeline {
