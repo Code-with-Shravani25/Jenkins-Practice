@@ -139,7 +139,7 @@ pipeline {
 
         stage('Checkout') {
             steps {
-                checkout scm
+                checkout scm # scm can only be in multibranch and in Pipeline script from SCM
             }
         }
 
