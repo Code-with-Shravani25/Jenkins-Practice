@@ -27,8 +27,8 @@ H/5 * * * * # Checks every 5 mins
 ## Configure Github webhook trigger
 - In job --> Configure --> Github webhook trigger for GitScm polling
 - Configure Github webhook
- - Open Github repo --> Settings --> Webhooks --> Add Webhook --> Payload URL (https://<jenkins-url>/<job-name>) --> Content type: application/json --> Events --> Select accordingly like just the push event
-- Not: Make sure job name is in lowercase as in webhook payload url it wont accepts uppercase and special characters
+ - Open Github repo --> Settings --> Webhooks --> Add Webhook --> Payload URL (https://<jenkins-url>:8080/github-webhook) --> Content type: application/json --> Events --> Select accordingly like just the push event
+- Note: Job name can be any but in payload url it should be github-webhook after jenkins url
 ---
 ## Verify: 
 - By pusing the data into git repo
