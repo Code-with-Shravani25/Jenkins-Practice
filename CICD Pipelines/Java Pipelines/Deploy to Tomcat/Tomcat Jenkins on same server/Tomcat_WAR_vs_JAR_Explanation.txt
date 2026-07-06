@@ -1,0 +1,105 @@
+Why Tomcat Needs a WAR File, web.xml, and index.jsp
+
+What is Tomcat?
+
+Apache Tomcat is a Web Server and Servlet Container. Its job is to run
+Java Web Applications. It does not execute normal Java programs.
+
+-   JVM runs Java applications (.jar)
+-   Tomcat runs Java Web Applications (.war)
+
+Why does Tomcat need a WAR file?
+
+A WAR (Web Application Archive) is a package designed specifically for
+Java web applications.
+
+Typical WAR structure:
+
+jenkins-demo-app.war | |– index.jsp |– WEB-INF | |– web.xml | |– classes
+| -- lib– META-INF
+
+When a WAR is copied into /opt/tomcat/webapps, Tomcat: 1. Detects the
+WAR. 2. Extracts it. 3. Reads WEB-INF/web.xml (or annotations). 4. Loads
+classes and libraries. 5. Starts the web application. 6. Makes it
+available at: http://server:8081/application-name
+
+Why can’t Tomcat deploy a normal JAR?
+
+A normal JAR contains Java classes and optionally a Main-Class.
+
+Example: com/demo/App.class
+
+It does not contain the standard web application structure such as: -
+WEB-INF - web.xml - JSP pages - Servlet mappings
+
+Therefore, Tomcat cannot deploy it as a web application.
+
+How does a JAR run?
+
+A JAR contains META-INF/MANIFEST.MF with a Main-Class entry.
+
+Example: Main-Class: com.demo.App
+
+Run using: java -jar target/jenkins-demo-app.jar
+
+The JVM starts the application’s main() method.
+
+Why do we need index.jsp?
+
+index.jsp is typically the default page displayed when a user opens the
+application.
+
+Example: Browser | v http://server:8081/jenkins-demo-app | v index.jsp
+
+Without index.jsp (or another welcome page), Tomcat has nothing to
+display and users may receive a 404 error.
+
+Why do we need web.xml?
+
+web.xml is the deployment descriptor for a Java web application.
+
+It can define: - Welcome page - Servlet mappings - Filters - Listeners -
+Session configuration - Security configuration
+
+Example:
+
+index.jsp
+
+This allows: http://server:8081/jenkins-demo-app
+
+to automatically load: index.jsp
+
+Without this configuration, users may need to specify:
+/jenkins-demo-app/index.jsp
+
+Modern Applications
+
+Modern Servlet applications can use annotations such as:
+
+@WebServlet(“/login”)
+
+instead of servlet mappings in web.xml. However, many enterprise
+applications still include web.xml for additional configuration.
+
+JAR vs WAR
+
+JAR - Java application - Runs on JVM - Started using: java -jar
+app.jar - Contains Main-Class
+
+WAR - Java Web Application - Runs on Tomcat - Deployed to Tomcat -
+Contains WEB-INF, web.xml, web resources, classes, and libraries
+
+Complete Deployment Flow
+
+Developer | GitHub | Jenkins Pipeline | mvn package |
+jenkins-demo-app.war | Copy to Tomcat webapps | Tomcat extracts WAR |
+Reads web.xml | Loads index.jsp | Application available in browser
+
+Interview Answer
+
+Tomcat requires a WAR file because it is a servlet container designed to
+host Java web applications. A WAR follows the standard web application
+structure, allowing Tomcat to extract it, read its configuration, load
+the application, and serve HTTP requests. A normal JAR is a Java
+application archive with a main() method and is executed by the JVM
+using ‘java -jar’, not by Tomcat.
