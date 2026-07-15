@@ -1,0 +1,119 @@
+Tomcat Manager, Roles, and RemoteAddrValve Explained
+
+1.  Why do we comment out the Valve section?
+
+By default, the Tomcat Manager and Host Manager applications can only be
+accessed from the local machine (localhost).
+
+Example:
+
+The RemoteAddrValve checks the client’s IP address. The allow attribute
+permits only: - 127.0.0.1 (IPv4 localhost) - ::1 (IPv6 localhost)
+
+If Jenkins or your browser tries to access the Manager application from
+another EC2 instance, Tomcat blocks the request.
+
+By commenting out the Valve, remote systems such as Jenkins can access
+the Manager application.
+
+Interview Answer: We comment out the RemoteAddrValve to allow remote
+access to the Tomcat Manager application. By default, it only allows
+connections from localhost for security reasons.
+
+------------------------------------------------------------------------
+
+2.  What are roles in Tomcat?
+
+Tomcat uses Role-Based Access Control (RBAC).
+
+A role defines what actions a user is allowed to perform inside Tomcat.
+
+Example:
+
+This means users with this role can access the Tomcat Manager web
+interface.
+
+------------------------------------------------------------------------
+
+3.  Why do we need roles?
+
+Roles provide authorization.
+
+When a user logs in, Tomcat checks: 1. Username 2. Password 3. Assigned
+roles
+
+Even if the username and password are correct, access is denied if the
+required role is missing.
+
+------------------------------------------------------------------------
+
+4.  manager-gui
+
+Role:
+
+Purpose: - Access the Tomcat Manager web interface - Deploy WAR files -
+Undeploy applications - Start applications - Stop applications - Reload
+applications - View deployed applications
+
+URL: http://:8080/manager/html
+
+------------------------------------------------------------------------
+
+5.  manager-script
+
+Role:
+
+Purpose: Allows deployment and management through scripts and automation
+tools such as Jenkins and curl using the Tomcat Manager API.
+
+------------------------------------------------------------------------
+
+6.  admin-gui
+
+Role:
+
+Purpose: Allows access to the Host Manager application used to manage
+virtual hosts.
+
+------------------------------------------------------------------------
+
+7.  Why do we create a user?
+
+Example:
+
+The user can perform all actions allowed by these assigned roles.
+
+------------------------------------------------------------------------
+
+8.  Is Tomcat Manager an application?
+
+Yes.
+
+The Tomcat Manager is a web application bundled with Tomcat.
+
+Location: /opt/tomcat/webapps/manager
+
+Access URL: http://:8080/manager/html
+
+------------------------------------------------------------------------
+
+9.  Manager vs Host Manager
+
+Manager: - Deploy applications - Start/Stop applications - Reload
+applications - View deployed applications
+
+Host Manager: - Create virtual hosts - Delete virtual hosts - Manage
+virtual host configuration
+
+------------------------------------------------------------------------
+
+Interview Summary
+
+Tomcat uses role-based access control to secure its management
+applications. The manager-gui role provides access to the web-based
+Manager application. The manager-script role allows automated
+deployments through scripts or Jenkins. The admin-gui role provides
+access to the Host Manager for managing virtual hosts. The
+RemoteAddrValve is commented out in lab environments to allow remote
+access. In production, it is recommended to keep it enabled and allow
+only trusted IP addresses.
