@@ -388,7 +388,7 @@ pipeline {
     }
 # Stops the running container named java-app.
 # Docker cannot create another container with the same name while one already exists. And if There is no container named java-app then the error is ignored by || true
-# 
+# docker stop java-app || true means "try to stop the container; if it doesn't exist or the command fails, execute true so the pipeline continues instead of failing.
     post {
 
         success {
