@@ -361,12 +361,19 @@ pipeline {
                 }
             }
         }
+# echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin securely logs in to Docker Hub.
+# Jenkins first retrieves the Docker Hub username and Personal Access Token from the configured Jenkins credentials and stores them in the environment variables DOCKER_USER and DOCKER_PASS.
+# The echo command outputs the token, and the pipe (|) passes it as input to the docker login command.
+# The --password-stdin option tells Docker to read the password or token from standard # input instead of prompting for it or exposing it on the command line
+# We use docker logout as a security best practice. After pushing the Docker image, the pipeline no longer needs Docker Hub access.
+# Logging out removes the stored authentication information from the Docker client, reducing the risk of credential misuse on shared Jenkins servers
 
         stage('Deploy') {
             steps {
                 sh '''
                 docker stop java-app || true
-                docker rm java-app || true
+
+                docker rm java-app || true 
 
                 docker pull ${IMAGE_NAME}:latest
 
@@ -379,7 +386,9 @@ pipeline {
         }
 
     }
-
+# Stops the running container named java-app.
+# Docker cannot create another container with the same name while one already exists. And if There is no container named java-app then the error is ignored by || true
+# 
     post {
 
         success {
