@@ -29,7 +29,7 @@ Running as root gives the container administrator-level permissions inside that 
 ## Mounts
 
 ```bash
-type: bind, source: /var/run/docker.sock, target:/var/run/docker.sock
+type: bind, source=/var/run/docker.sock, target=/var/run/docker.sock
 ```
 
 My dynamic agent container wants to talk to Docker installed on my Jenkins controller/EC2 host, so we bind the EC2 host's Docker socket path to the container's Docker socket path
