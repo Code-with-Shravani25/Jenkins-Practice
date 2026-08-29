@@ -1,0 +1,74 @@
+pipeline {
+
+    agent {
+        label 'docker-agent'
+    }
+
+    environment {
+        IMAGE_NAME = 'shravani2001/python'
+    }
+
+    stages {
+
+        stage('Clone') {
+            steps {
+                git branch: 'main',
+                    url: 'https://github.com/Code-with-Shravani25/python-code-with-test-cases.git'
+            }
+        }
+
+        stage('Docker Build') {
+            steps {
+                sh '''
+                    docker build -t ${IMAGE_NAME}:latest .
+                '''
+            }
+        }
+
+        stage('Test') {
+            steps {
+                sh '''
+                    docker run --rm ${IMAGE_NAME}:latest pytest -v
+                '''
+            }
+        }
+
+        stage('DockerLogin') {
+            steps {
+                withCredentials([
+                    usernamePassword(
+                        credentialsId: 'dockerhub',
+                        usernameVariable: 'DOCKER_USERNAME',
+                        passwordVariable: 'DOCKER_PASSWORD'
+                    )
+                ]) {
+                    sh '''
+                        echo "$DOCKER_PASSWORD" | \
+                        docker login -u "$DOCKER_USERNAME" --password-stdin
+                    '''
+                }
+            }
+        }
+
+        stage('DockerPush') {
+            steps {
+                sh '''
+                    docker push ${IMAGE_NAME}:latest
+                '''
+            }
+        }
+
+        stage('Deploy') {
+            steps {
+                sh '''
+                    docker rm -f python-app || true
+
+                    docker run -d \
+                        --name python-app \
+                        -p 5000:5000 \
+                        ${IMAGE_NAME}:latest
+                '''
+            }
+        }
+    }
+}
